@@ -13,6 +13,8 @@ class FileIO : IO {
     }
 
     override fun write(data: String) {
-        TODO("Not yet implemented")
+        var file:File = File("src/main/kotlin/output.txt");
+        file.createNewFile();
+        file.writeText(data);
     }
 }
