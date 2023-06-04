@@ -1,23 +1,20 @@
 import constants.Constants
+import constants.InputTypeEnum
 import dataAccess.ConsoleIO
 import dataAccess.FileIO
-import dataAccess.IO
 import processing.Determine
 
-fun main(args: Array<String>) {
-    var outType = Constants.CONSOLE_IO;
-    var io: IO;
-    var data:String;
-    when (outType) {
-        1 -> {
-            io = ConsoleIO()
-            data = io.read();
-            io.write(Determine(data, Constants.HEX).getResult())
+fun main() {
+    val outType = InputTypeEnum.CONSOLE_IO
+    val data:String
+    val io = when (outType) {
+        InputTypeEnum.CONSOLE_IO -> {
+            ConsoleIO()
         }
-        2 ->{
-            io = FileIO()
-            data = io.read();
-            io.write(Determine(data, Constants.HEX).getResult())
+        InputTypeEnum.FILE_IO ->{
+            FileIO()
         }
     }
+    data = io.read()
+    io.write(Determine(data, Constants.HEX).getResult())
 }

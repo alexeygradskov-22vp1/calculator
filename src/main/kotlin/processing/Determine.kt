@@ -2,75 +2,70 @@ package processing
 
 import exceptions.InvalidFormat
 
-class Determine(data: String, type: Int) {
-    private var result: String = "";
-    private var _data = data;
-    private var _type = type;
+class Determine(private val data: String, private val type: Int) {
+    private var result: String = ""
+    private var _data = data
+    private var _type = type
 
     init {
-        determine();
+        determine()
     }
 
     private fun determine() {
-        var list: List<String> = _data.split("\n");
-        list = list.dropLast(1);
+        var list: List<String> = _data.split("\n")
+        list = list.dropLast(1)
         list.forEach {
-            val listOfString: List<String> = processAString(it).split(" ");
+            val listOfString: List<String> = processAString(it).split(" ")
             result += try {
-                if (listOfString[0].matches(Regex("stop")) ||
-                    listOfString[0].matches(Regex("stop")) ||
-                    listOfString[0].matches(
-                        Regex("stop")
-                    )
+                if (listOfString[0].matches(Regex("stop"))
                 ) {
-                    result += "stop";
-                    return;
+                    result += "stop"
+                    return
                 }
-                validData(listOfString);
-                calculate(listOfString) + "\n";
+                validData(listOfString)
+                calculate(listOfString) + "\n"
             } catch (e: InvalidFormat) {
-                e.what() + "\n";
+                e.what() + "\n"
             }
 
         }
     }
 
     private fun calculate(data: List<String>): String {
-        var resultOfCalculation = 0;
-        var resultString = "";
-        when (data[1]) {
-            "*" -> resultOfCalculation = (data[0].toInt() * data[2].toInt())
-            "/" -> resultOfCalculation = (data[0].toInt() / data[2].toInt())
-            "+" -> resultOfCalculation = (data[0].toInt() + data[2].toInt())
-            "-" -> resultOfCalculation = (data[0].toInt() - data[2].toInt())
+        val resultOfCalculation = when (data[1]) {
+            "*" -> (data[0].toInt() * data[2].toInt())
+            "/" -> (data[0].toInt() / data[2].toInt())
+            "+" -> (data[0].toInt() + data[2].toInt())
+            "-" -> (data[0].toInt() - data[2].toInt())
+            else -> 0
         }
-        when (_type) {
-            1 -> resultString = Integer.toBinaryString(resultOfCalculation);
-            2 -> resultString = Integer.toHexString(resultOfCalculation);
-            3 -> resultString = Integer.toOctalString(resultOfCalculation);
-            4 -> resultString = resultOfCalculation.toString();
+        return when (_type) {
+            1 -> Integer.toBinaryString(resultOfCalculation)
+            2 -> Integer.toHexString(resultOfCalculation)
+            3 -> Integer.toOctalString(resultOfCalculation)
+            4 -> resultOfCalculation.toString()
+            else -> ""
         }
-        return resultString;
     }
 
     private fun validData(list: List<String>): Boolean {
-        if (list[0] == null || list[2] == null || !list[0].matches(Regex("^\\d+\$")) || !list[2].matches(Regex("^\\d+\$"))) {
-            throw InvalidFormat("Неверный формат строки");
+        if (list[0].isEmpty() || list[2].isEmpty() || !list[0].matches(Regex("^\\d+\$")) || !list[2].matches(Regex("^\\d+\$"))) {
+            throw InvalidFormat("Неверный формат строки")
         }
-        return true;
+        return true
     }
 
     fun getResult(): String {
-        return result;
+        return result
     }
 
     private fun processAString(string: String): String {
-        var replacedString: String = string.replace("\\s+".toRegex(), " ");
-        replacedString = replacedString.replace("*", " * ");
-        replacedString = replacedString.replace("/", " / ");
-        replacedString = replacedString.replace("+", " + ");
-        replacedString = replacedString.replace("-", " - ");
+        var replacedString: String = string.replace("\\s+".toRegex(), " ")
+        replacedString = replacedString.replace("*", " * ")
+        replacedString = replacedString.replace("/", " / ")
+        replacedString = replacedString.replace("+", " + ")
+        replacedString = replacedString.replace("-", " - ")
         replacedString = replacedString.replace("\n$".toRegex(), "")
-        return replacedString;
+        return replacedString
     }
 }
