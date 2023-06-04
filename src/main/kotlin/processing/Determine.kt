@@ -12,7 +12,8 @@ class Determine(data: String, type: Int) {
     }
 
     private fun determine() {
-        val list: List<String> = _data.split("\n");
+        var list: List<String> = _data.split("\n");
+        list = list.dropLast(1);
         list.forEach {
             val listOfString: List<String> = processAString(it).split(" ");
             result += try {
@@ -22,10 +23,10 @@ class Determine(data: String, type: Int) {
                         Regex("stop")
                     )
                 ) {
-                    result+="stop";
+                    result += "stop";
                     return;
                 }
-                    validData(listOfString);
+                validData(listOfString);
                 calculate(listOfString) + "\n";
             } catch (e: InvalidFormat) {
                 e.what() + "\n";
@@ -53,7 +54,7 @@ class Determine(data: String, type: Int) {
     }
 
     private fun validData(list: List<String>): Boolean {
-        if (!list[0].matches(Regex("^\\d+\$")) || !list[2].matches(Regex("^\\d+\$"))) {
+        if (list[0] == null || list[2] == null || !list[0].matches(Regex("^\\d+\$")) || !list[2].matches(Regex("^\\d+\$"))) {
             throw InvalidFormat("Неверный формат строки");
         }
         return true;
@@ -69,6 +70,7 @@ class Determine(data: String, type: Int) {
         replacedString = replacedString.replace("/", " / ");
         replacedString = replacedString.replace("+", " + ");
         replacedString = replacedString.replace("-", " - ");
+        replacedString = replacedString.replace("\n$".toRegex(), "")
         return replacedString;
     }
 }
