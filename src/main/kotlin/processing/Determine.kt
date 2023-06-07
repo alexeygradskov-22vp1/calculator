@@ -2,10 +2,9 @@ package processing
 
 import exceptions.InvalidFormat
 
-class Determine(private val data: String, private val type: Int) {
+class Determine(private val data: String) {
     private var result: String = ""
     private var _data = data
-    private var _type = type
 
     init {
         determine()
@@ -39,13 +38,7 @@ class Determine(private val data: String, private val type: Int) {
             "-" -> (data[0].toInt() - data[2].toInt())
             else -> 0
         }
-        return when (_type) {
-            1 -> Integer.toBinaryString(resultOfCalculation)
-            2 -> Integer.toHexString(resultOfCalculation)
-            3 -> Integer.toOctalString(resultOfCalculation)
-            4 -> resultOfCalculation.toString()
-            else -> ""
-        }
+        return Int.toBinary(resultOfCalculation)
     }
 
     private fun validData(list: List<String>): Boolean {
@@ -67,5 +60,23 @@ class Determine(private val data: String, private val type: Int) {
         replacedString = replacedString.replace("-", " - ")
         replacedString = replacedString.replace("\n$".toRegex(), "")
         return replacedString
+    }
+
+
+    private fun Int.Companion.toBinary(decimal: Int): String {
+        var number = decimal
+        val binary = StringBuilder()
+
+        if (number == 0) {
+            return "0"
+        }
+
+        while (number > 0) {
+            val bit = number % 2
+            binary.insert(0, bit)
+            number /= 2
+        }
+
+        return binary.toString()
     }
 }
